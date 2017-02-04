@@ -1,9 +1,11 @@
-package com.gokhanaliccii.placefinder;
+package com.gokhanaliccii.placefinder.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.gokhanaliccii.placefinder.R;
+
+public class PlaceFinderActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
