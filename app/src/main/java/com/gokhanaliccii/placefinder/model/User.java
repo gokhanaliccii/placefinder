@@ -1,8 +1,8 @@
 package com.gokhanaliccii.placefinder.model;
 
 /**
- * Created by gokhan on 04/02/17.
+ * Created by gokhan on 05/02/17.
  */
 
-public class Venues {
+public class User {
 }
