@@ -5,4 +5,9 @@ package com.gokhanaliccii.placefinder.model;
  */
 
 public class Meta {
+
+    private int code;
+    private String requestId;
+
+
 }

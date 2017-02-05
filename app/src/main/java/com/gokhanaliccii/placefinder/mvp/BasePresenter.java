@@ -5,4 +5,5 @@ package com.gokhanaliccii.placefinder.mvp;
  */
 
 public interface BasePresenter {
+
 }

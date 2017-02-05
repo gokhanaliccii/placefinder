@@ -7,9 +7,9 @@ package com.gokhanaliccii.placefinder.model;
 public class VenuesListResponse {
 
     private Meta meta;
-    private Response response;
+    private ResponseVenues response;
 
-    public Response getResponse() {
+    public ResponseVenues getResponse() {
         return response;
     }
 }

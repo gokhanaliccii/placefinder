@@ -5,4 +5,9 @@ package com.gokhanaliccii.placefinder.model;
  */
 
 public class ResponseVenue {
+    Venue venue;
+
+    public Venue getVenue() {
+        return venue;
+    }
 }

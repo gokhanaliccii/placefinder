@@ -1,19 +1,35 @@
 package com.gokhanaliccii.placefinder.events;
 
-import com.gokhanaliccii.placefinder.model.FourSquareResponse;
+import com.gokhanaliccii.placefinder.model.ResponseVenues;
 
 /**
  * Created by gokhan on 04/02/17.
  */
 
 public class ShowVenuesListEvent {
-    private FourSquareResponse mResponse;
+    private String title;
+    private ResponseVenues mResponse;
 
-    public ShowVenuesListEvent(FourSquareResponse mResponse) {
+    public ShowVenuesListEvent(ResponseVenues mResponse) {
         this.mResponse = mResponse;
     }
 
-    public FourSquareResponse getmResponse() {
+    public ShowVenuesListEvent(ResponseVenues mResponse,String title) {
+
+        this.mResponse = mResponse;
+        this.title=title;
+    }
+
+    public ResponseVenues getResponse() {
+
         return mResponse;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
