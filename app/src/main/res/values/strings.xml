@@ -22,4 +22,8 @@
     <string name="popup_invalid_input_title">Invalid Content</string>
     <string name="popup_invalid_input_content">You cant search numeric data and lesser than 3 character</string>
     <string name="searching">Searching...</string>
+
+    <string name="empty_placelist">Search result is empty</string>
+
+
 </resources>

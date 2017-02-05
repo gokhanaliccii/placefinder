@@ -22,4 +22,6 @@
     <string name="popup_invalid_input_content">Arama yapabilmek için en az 3 karakter girmelisiniz ve rakam içermemeli</string>
     <string name="searching">Aranıyor...</string>
 
+    <string name="empty_placelist">Uygun mekan bulunamadı</string>
+
 </resources>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gokhanaliccii.placefinder.R;
 import com.gokhanaliccii.placefinder.adapters.PlaceListAdapter;
@@ -32,6 +33,9 @@ public class PlaceListFragment extends Fragment {
 
     @BindView(R.id.recyclerview_placelist)
     RecyclerView mPlacesRecyclerView;
+
+    @BindView(R.id.tv_placelist_empty)
+    TextView mEmptyTv;
 
     private PlaceListAdapter mAdapter;
     private ResponseVenues mResponse;
@@ -78,6 +82,12 @@ public class PlaceListFragment extends Fragment {
     }
 
     private void initView() {
+
+        if (mResponse == null || mResponse.getVenues() == null) {
+
+            mEmptyTv.setVisibility(View.VISIBLE);
+            return;
+        }
 
         mAdapter = new PlaceListAdapter(mResponse.getVenues());
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
