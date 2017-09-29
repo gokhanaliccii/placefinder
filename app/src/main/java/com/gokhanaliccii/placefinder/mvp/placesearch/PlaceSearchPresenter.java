@@ -1,11 +1,13 @@
 package com.gokhanaliccii.placefinder.mvp.placesearch;
 
 import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.gokhanaliccii.placefinder.App;
 import com.gokhanaliccii.placefinder.api.SearchAPI;
 import com.gokhanaliccii.placefinder.model.VenuesListResponse;
+import com.gokhanaliccii.placefinder.mvp.placesearch.PlaceSearchContact.Presenter;
 import com.gokhanaliccii.placefinder.utility.StringValidator;
 
 import retrofit2.Call;
@@ -18,23 +20,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by gokhan on 04/02/17.
  */
 
-public class PlaceSearchPresenter implements PlaceSearchContact.Presenter {
+public class PlaceSearchPresenter implements Presenter<PlaceSearchContact.View> {
 
     public static final String TAG = "PlaceSearchPresenter";
 
-
     PlaceSearchContact.View mView;
 
-    public PlaceSearchPresenter(PlaceSearchContact.View mView) {
 
-        this.mView = mView;
+    @Override
+    public void attachView(PlaceSearchContact.View view) {
+        mView = view;
+    }
+
+    @Override
+    public void detachView() {
+        mView = null;
     }
 
     @Override
     public void searchPlace(final String type, String where, Location location) {
-
         //check PlaceTpye
-
         boolean valid = StringValidator.isValidPlaceType(type);
         if (!StringValidator.isValidPlaceType(type)) {
 
@@ -110,12 +115,10 @@ public class PlaceSearchPresenter implements PlaceSearchContact.Presenter {
                 mView.showApiFailError();
             }
         });
-
-
-        //GetPlacesFrom FourSquareAPI
     }
 
+    @Override
+    public void storeValues(Bundle bundle) {
+        /** NOT NEED ON THERE **/
+    }
 }
-
-// Dokunma katmerime böreğime eğer onları bir kimseye verirsen ömründe bir karıncayı bile incitmeyen ben fatma ana
-//hiç düşünmeden atarım balkondan seni

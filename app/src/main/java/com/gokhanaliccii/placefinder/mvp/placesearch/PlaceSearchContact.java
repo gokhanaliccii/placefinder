@@ -12,24 +12,25 @@ import com.gokhanaliccii.placefinder.mvp.BaseView;
 
 public interface PlaceSearchContact {
 
-    public interface View extends BaseView {
+    interface View extends BaseView {
 
-        public void showSearchResult(String title,ResponseVenues response);
+        void showSearchResult(String title, ResponseVenues response);
 
-        public void showPlaceSearchingPopup();
+        void showPlaceSearchingPopup();
 
-        public void showWarnUserInput(String warnText);
+        void showWarnUserInput(String warnText);
 
-        public void showTypeLocationForcelyPopup();
+        void showTypeLocationForcelyPopup();
 
-        public void showNeedGpsPopup();
-        public void showApiFailError();
+        void showNeedGpsPopup();
+
+        void showApiFailError();
 
     }
 
-    public interface Presenter extends BasePresenter {
+    interface Presenter<V extends BaseView> extends BasePresenter<View> {
 
-        public void searchPlace(String type, String where, Location location);
+        void searchPlace(String type, String where, Location location);
     }
 
 

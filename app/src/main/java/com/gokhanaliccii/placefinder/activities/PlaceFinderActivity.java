@@ -1,27 +1,23 @@
 package com.gokhanaliccii.placefinder.activities;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.gokhanaliccii.placefinder.R;
-import com.gokhanaliccii.placefinder.events.PermissionGrantEvent;
 import com.gokhanaliccii.placefinder.events.RefreshLocationEvent;
 import com.gokhanaliccii.placefinder.events.ShowVenueDetailEvent;
 import com.gokhanaliccii.placefinder.events.ShowVenuesListEvent;
 import com.gokhanaliccii.placefinder.fragments.PlaceListFragment;
 import com.gokhanaliccii.placefinder.fragments.PlaceSearchFragment;
 import com.gokhanaliccii.placefinder.fragments.VenueDetailFragment;
-import com.gokhanaliccii.placefinder.model.Location;
 import com.gokhanaliccii.placefinder.model.ResponseVenues;
 import com.gokhanaliccii.placefinder.model.Venue;
 
@@ -31,6 +27,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.INTERNET;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class PlaceFinderActivity extends AppCompatActivity {
 
@@ -58,7 +59,10 @@ public class PlaceFinderActivity extends AppCompatActivity {
             location = getIntent().getExtras().getParcelable(SplashActivity.CURRENT_LOCATION);
 
         //Add Search Fragment
-        getSupportFragmentManager().beginTransaction().add(R.id.place_finder_fragment_content, PlaceSearchFragment.NewInstance(location)).commit();
+        PlaceSearchFragment placeSearchFragment = PlaceSearchFragment.newInstance(location);
+
+        getSupportFragmentManager().beginTransaction().
+                add(R.id.place_finder_fragment_content, placeSearchFragment).commit();
 
         if (!hasAllPermissionsCheck())
             requestNeedPermissions();
@@ -75,22 +79,20 @@ public class PlaceFinderActivity extends AppCompatActivity {
     private void requestNeedPermissions() {
 
         ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.INTERNET, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                new String[]{INTERNET, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION},
                 1);
     }
 
     private boolean hasAllPermissionsCheck() {
+        boolean grantedAllPermissions = checkPermissionGranted(INTERNET)
+                && checkPermissionGranted(ACCESS_FINE_LOCATION)
+                && checkPermissionGranted(ACCESS_COARSE_LOCATION);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
-            return false;
+        return grantedAllPermissions;
+    }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            return false;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            return false;
-
-        return true;
+    private boolean checkPermissionGranted(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) == PERMISSION_GRANTED;
     }
 
 
@@ -157,7 +159,6 @@ public class PlaceFinderActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-
         int menuID = menuItem.getItemId();
 
         if (menuID == android.R.id.home) {
@@ -170,20 +171,17 @@ public class PlaceFinderActivity extends AppCompatActivity {
     }
 
     private void showBackButton() {
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void hideBackButton() {
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
 
     @Override
     protected void onDestroy() {
-
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }

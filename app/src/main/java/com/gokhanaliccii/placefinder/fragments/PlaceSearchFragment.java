@@ -1,29 +1,22 @@
 package com.gokhanaliccii.placefinder.fragments;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gokhanaliccii.placefinder.R;
-import com.gokhanaliccii.placefinder.enums.PermissionType;
-import com.gokhanaliccii.placefinder.events.PermissionGrantEvent;
 import com.gokhanaliccii.placefinder.events.RefreshLocationEvent;
 import com.gokhanaliccii.placefinder.events.ShowVenuesListEvent;
 import com.gokhanaliccii.placefinder.model.ResponseVenues;
@@ -35,10 +28,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.View {
@@ -61,16 +53,8 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
 
     MaterialDialog mProgressbar;
 
-    public PlaceSearchFragment() {
-    }
 
-    public static PlaceSearchFragment NewInstance() {
-
-        return new PlaceSearchFragment();
-    }
-
-    public static PlaceSearchFragment NewInstance(Location mCurrentLocation) {
-
+    public static PlaceSearchFragment newInstance(Location mCurrentLocation) {
         if (mCurrentLocation == null)
             return new PlaceSearchFragment();
 
@@ -104,7 +88,9 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
             mCurrentLocation = getArguments().getParcelable(CURRENT_LOCATION);
 
         //create our presenter
-        mPresenter = new PlaceSearchPresenter(this);
+        if (mPresenter == null) {
+            mPresenter = new PlaceSearchPresenter();
+        }
     }
 
     @Override
@@ -114,14 +100,13 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
         View view = inflater.inflate(R.layout.fragment_place_search, container, false);
         ButterKnife.bind(this, view);
 
-        initView();
+        mPresenter.attachView(this);
 
         return view;
     }
 
     @Override
     public void showSearchResult(String title, ResponseVenues response) {
-
         hideLoading();
 
         //open fragment
@@ -130,7 +115,6 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
 
     @Override
     public void showPlaceSearchingPopup() {
-
         mProgressbar = new MaterialDialog.Builder(getContext())
                 .progress(true, 0).content(R.string.searching).cancelable(false)
                 .show();
@@ -138,8 +122,10 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
 
     @Override
     public void showWarnUserInput(String warnText) {
-
-        new MaterialDialog.Builder(getContext()).title(R.string.popup_invalid_input_title).content(R.string.popup_invalid_input_content).positiveText(R.string.ok).show();
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.popup_invalid_input_title)
+                .content(R.string.popup_invalid_input_content)
+                .positiveText(R.string.ok).show();
     }
 
     @Override
@@ -150,38 +136,28 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
 
     @Override
     public void showNeedGpsPopup() {
-
         openGpsPopup();
     }
 
     @Override
     public void showApiFailError() {
-
-        new MaterialDialog.Builder(getContext()).title(R.string.popup_search_fail_title).content(R.string.popup_search_fail_content).positiveText(R.string.ok).show();
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.popup_search_fail_title)
+                .content(R.string.popup_search_fail_content)
+                .positiveText(R.string.ok).show();
     }
 
-    @Override
-    public void initView() {
+    @OnClick({R.id.button_place_search})
+    public void onClick(View view) {
+        if (view.getId() == R.id.button_place_search) {
+            String placeType = mPlaceTypeEditText.getText().toString();
+            String where = mPlaceWhereEditText.getText().toString();
 
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String placeType = mPlaceTypeEditText.getText().toString();
-                String where = mPlaceWhereEditText.getText().toString();
-
-                mPresenter.searchPlace(placeType, where, mCurrentLocation);
-            }
-        });
-    }
-
-    @Override
-    public void onAttach() {
-
+            mPresenter.searchPlace(placeType, where, mCurrentLocation);
+        }
     }
 
     private void openGpsPopup() {
-
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(intent);
     }
@@ -193,17 +169,18 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
     }
 
     private void refreshLocation() {
-
         mCurrentLocation = LocationUtility.getCurrentLocation((LocationManager) (getActivity().getSystemService(Context.LOCATION_SERVICE)));
     }
 
 
     private void hideLoading() {
-
         if (mProgressbar != null)
             mProgressbar.dismiss();
-
     }
 
-
+    @Override
+    public void onDestroyView() {
+        mPresenter.detachView();
+        super.onDestroyView();
+    }
 }

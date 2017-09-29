@@ -5,7 +5,5 @@ package com.gokhanaliccii.placefinder.mvp;
  */
 
 public interface BaseView {
-    public void initView();
-    public void onAttach();
-    public void onDetach();
+
 }
