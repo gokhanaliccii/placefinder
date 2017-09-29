@@ -15,12 +15,15 @@ import org.greenrobot.eventbus.EventBus;
 
 public class LocationProviderReceiver extends BroadcastReceiver {
 
+    public static final String LOCATION_SETTING_CHANGED = "android.location.PROVIDERS_CHANGED";
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
+        if (intent.getAction().matches(LOCATION_SETTING_CHANGED)) {
 
-            LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            LocationManager manager =
+                    (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
             if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
                 EventBus.getDefault().post(new RefreshLocationEvent());

@@ -3,12 +3,18 @@ package com.gokhanaliccii.placefinder.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by gokhan on 05/02/17.
  */
 
 public class Photo implements Parcelable {
+
+    @SerializedName("prefix")
     String prefix;
+
+    @SerializedName("suffix")
     String suffix;
 
     @Override
