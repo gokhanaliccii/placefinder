@@ -130,8 +130,8 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
 
     @Override
     public void showTypeLocationForcelyPopup() {
-
-        new MaterialDialog.Builder(getContext()).title(R.string.popup_location_not_found_title).content(R.string.popup_location_not_found_content).show();
+        new MaterialDialog.Builder(getContext()).title(R.string.popup_location_not_found_title)
+                .content(R.string.popup_location_not_found_content).show();
     }
 
     @Override
@@ -169,7 +169,8 @@ public class PlaceSearchFragment extends Fragment implements PlaceSearchContact.
     }
 
     private void refreshLocation() {
-        mCurrentLocation = LocationUtility.getCurrentLocation((LocationManager) (getActivity().getSystemService(Context.LOCATION_SERVICE)));
+        mCurrentLocation = LocationUtility.getCurrentLocation((LocationManager)
+                (getActivity().getSystemService(Context.LOCATION_SERVICE)));
     }
 
 

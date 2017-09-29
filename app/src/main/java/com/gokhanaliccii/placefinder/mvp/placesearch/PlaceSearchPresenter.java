@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.gokhanaliccii.placefinder.App;
+import com.gokhanaliccii.placefinder.Interactor;
 import com.gokhanaliccii.placefinder.api.SearchAPI;
 import com.gokhanaliccii.placefinder.model.VenuesListResponse;
 import com.gokhanaliccii.placefinder.mvp.placesearch.PlaceSearchContact.Presenter;
@@ -14,7 +15,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by gokhan on 04/02/17.
@@ -57,7 +57,7 @@ public class PlaceSearchPresenter implements Presenter<PlaceSearchContact.View> 
         //show user loading popup
         this.mView.showPlaceSearchingPopup();
 
-        Retrofit mRetrofit = new Retrofit.Builder().baseUrl(App.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit mRetrofit = Interactor.restInteractor().retrofit();
         SearchAPI searchAPI = mRetrofit.create(SearchAPI.class);
 
         //search by user input

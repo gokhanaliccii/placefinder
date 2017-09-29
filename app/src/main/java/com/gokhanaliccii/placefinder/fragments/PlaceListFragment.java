@@ -45,7 +45,6 @@ public class PlaceListFragment extends Fragment {
     }
 
     public static PlaceListFragment NewInstance(ResponseVenues response) {
-
         Bundle mBundle = new Bundle();
         mBundle.putParcelable(RESPONSE_OBJ, response);
 
@@ -82,9 +81,7 @@ public class PlaceListFragment extends Fragment {
     }
 
     private void initView() {
-
         if (mResponse == null || mResponse.getVenues() == null) {
-
             mEmptyTv.setVisibility(View.VISIBLE);
             return;
         }
@@ -100,7 +97,8 @@ public class PlaceListFragment extends Fragment {
         mPlacesRecyclerView.setAdapter(mAdapter);
 
 
-        mPlacesRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mPlacesRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        mPlacesRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                mPlacesRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 

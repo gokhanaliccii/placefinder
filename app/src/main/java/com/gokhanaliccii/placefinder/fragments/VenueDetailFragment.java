@@ -1,8 +1,6 @@
 package com.gokhanaliccii.placefinder.fragments;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.gokhanaliccii.placefinder.App;
+import com.gokhanaliccii.placefinder.Interactor;
 import com.gokhanaliccii.placefinder.R;
 import com.gokhanaliccii.placefinder.adapters.UserCommentAdapter;
 import com.gokhanaliccii.placefinder.api.SearchAPI;
@@ -48,7 +45,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.gokhanaliccii.placefinder.App.FOURSQUORE_CLIENT_ID;
+import static com.gokhanaliccii.placefinder.App.FOURSQUORE_SECRET_ID;
+import static com.gokhanaliccii.placefinder.App.FOURSQUORE_VERSION;
 
 /**
  * Created by gokhan on 05/02/17.
@@ -58,6 +58,7 @@ public class VenueDetailFragment extends DialogFragment implements OnMapReadyCal
 
     public static final String TAG = "VenueDetailFragment";
     public static final String VENUE_OBJ = "venue_obj";
+    public static final String X400 = "400x400";
 
     Venue mVenue;
 
@@ -76,9 +77,8 @@ public class VenueDetailFragment extends DialogFragment implements OnMapReadyCal
     @BindView(R.id.map_venue_detail)
     MapView mMap;
 
-
-    UserCommentAdapter mUserCommentAdapter;
-    LinearLayoutManager linearLayoutManager;
+    private UserCommentAdapter mUserCommentAdapter;
+    private LinearLayoutManager linearLayoutManager;
 
 
     public static VenueDetailFragment NewInstance(Venue mVenue) {
@@ -151,37 +151,40 @@ public class VenueDetailFragment extends DialogFragment implements OnMapReadyCal
     }
 
     private void getVenueDetail() {
+        Retrofit mRetrofit = Interactor.restInteractor().retrofit();
 
-        Retrofit mRetrofit = new Retrofit.Builder().baseUrl(App.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         SearchAPI searchAPI = mRetrofit.create(SearchAPI.class);
 
-        searchAPI.getVenueDetail(mVenue.getId(), App.FOURSQUORE_VERSION, App.FOURSQUORE_CLIENT_ID, App.FOURSQUORE_SECRET_ID).enqueue(new Callback<VenueDetailResponse>() {
-            @Override
-            public void onResponse(Call<VenueDetailResponse> call, Response<VenueDetailResponse> response) {
+        searchAPI.getVenueDetail(mVenue.getId(), FOURSQUORE_VERSION,
+                FOURSQUORE_CLIENT_ID, FOURSQUORE_SECRET_ID)
+                .enqueue(new Callback<VenueDetailResponse>() {
+                    @Override
+                    public void onResponse(Call<VenueDetailResponse> call,
+                                           Response<VenueDetailResponse> response) {
 
 
-                VenueDetailResponse venueDetailResponse = response.body();
-                ResponseVenue responseVenue = venueDetailResponse.getResponse();
-                Venue venue = responseVenue.getVenue();
+                        VenueDetailResponse venueDetailResponse = response.body();
+                        ResponseVenue responseVenue = venueDetailResponse.getResponse();
+                        Venue venue = responseVenue.getVenue();
 
-                showPlaceImage(venue.getBestPhoto());
+                        showPlaceImage(venue.getBestPhoto());
 
-                Tips tips = venue.getTips();
-                ArrayList<TipGroup> groups = tips.getGroups();
+                        Tips tips = venue.getTips();
+                        ArrayList<TipGroup> groups = tips.getGroups();
 
-                ArrayList<UserComment> userComments = groups.get(0).getItems();
-                refreshComments(userComments);
+                        ArrayList<UserComment> userComments = groups.get(0).getItems();
+                        refreshComments(userComments);
 
 
-                Log.i(TAG, "onResponse");
-            }
+                        Log.i(TAG, "onResponse");
+                    }
 
-            @Override
-            public void onFailure(Call<VenueDetailResponse> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<VenueDetailResponse> call, Throwable t) {
 
-                Log.i(TAG, "onFail");
-            }
-        });
+                        Log.i(TAG, "onFail");
+                    }
+                });
 
     }
 
@@ -192,11 +195,10 @@ public class VenueDetailFragment extends DialogFragment implements OnMapReadyCal
     }
 
     private void showPlaceImage(Photo photo) {
-
         if (photo == null)
             return;
 
-        String photoUrl = photo.getImageBySize("400x400");
+        String photoUrl = photo.getImageBySize(X400);
         if (photoUrl == null)
             return;
 

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.gokhanaliccii.placefinder.fragments.PlaceSearchFragment;
 import com.gokhanaliccii.placefinder.fragments.VenueDetailFragment;
 import com.gokhanaliccii.placefinder.model.ResponseVenues;
 import com.gokhanaliccii.placefinder.model.Venue;
+import com.gokhanaliccii.placefinder.utility.PermissionUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.INTERNET;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class PlaceFinderActivity extends AppCompatActivity {
 
@@ -77,7 +76,6 @@ public class PlaceFinderActivity extends AppCompatActivity {
     }
 
     private void requestNeedPermissions() {
-
         ActivityCompat.requestPermissions(this,
                 new String[]{INTERNET, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION},
                 1);
@@ -92,13 +90,11 @@ public class PlaceFinderActivity extends AppCompatActivity {
     }
 
     private boolean checkPermissionGranted(String permission) {
-        return ContextCompat.checkSelfPermission(this, permission) == PERMISSION_GRANTED;
+        return PermissionUtil.hasPermission(this, permission);
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(ShowVenuesListEvent event) {
-
         if (event == null)
             return;
 
