@@ -3,16 +3,30 @@ package com.gokhanaliccii.placefinder.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by gokhan on 04/02/17.
  */
 
 public class Location implements Parcelable {
+
+    @SerializedName("lat")
     private float lat;
+
+    @SerializedName("lng")
     private float lng;
+
+    @SerializedName("address")
     String address;
+
+    @SerializedName("country")
     String country;
+
+    @SerializedName("city")
     String city;
+
+    @SerializedName("state")
     String state;
 
 

@@ -16,10 +16,10 @@ public class StringValidator {
         if (placeType.length() < 3)
             return false;
 
-        String mCombimned = placeType.replaceAll(" ", "");
+        String trimmedPlaceType = placeType.replaceAll(" ", "");
 
         //area has to be only alphabetic character
-        if (!Pattern.matches("[a-zA-Z]+", mCombimned))
+        if (!Pattern.matches("[a-zA-Z]+", trimmedPlaceType))
             return false;
 
         return true;

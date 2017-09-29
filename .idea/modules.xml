@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PlaceFinder.iml" filepath="$PROJECT_DIR$/PlaceFinder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/place finder.iml" filepath="$PROJECT_DIR$/place finder.iml" />
     </modules>
   </component>
 </project>
